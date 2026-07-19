@@ -1,0 +1,59 @@
+{
+  "@context": ["https://w3id.org/ro/crate/1.1/context"],
+  "@type": "Project",
+  "id": "etzhayyim-project-legal-corpus",
+  "name": "legal-corpus",
+  "displayName": "Global Legal Corpus",
+  "actorDid": "did:web:legal-corpus.etzhayyim.com",
+  "nanoid": "lc0rpus0",
+  "tier": "T2",
+  "implementation": "langgraph-server",
+  "ownerOrg": "did:plc:etzhayyim-japan",
+  "description": "Foreign-jurisdiction primary legal source ingest, normalization, embedding (bge-m3 1024d), semantic search. CourtListener (US) + EUR-Lex (EU) + BAILII (UK/IE) + WorldLII (Commonwealth) + CanLII/SCC (CA). ADR-0049, ADR-0056.",
+  "lexiconPrefix": "com.etzhayyim.apps.legal-corpus",
+  "lexicons": [
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/ingestDocument.json",
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/embedDocument.json",
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/searchDocument.json",
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/getDocument.json",
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/listJurisdictions.json",
+    "00-contracts/lexicons/com/etzhayyim/apps/legal-corpus/registerSource.json"
+  ],
+  "bpmn": [
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/ingestDocument.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/embedDocument.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/registerSource.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/fetchCourtListenerDelta.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/fetchEurLexDelta.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/fetchBailiiDelta.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/fetchWorldLiiDelta.bpmn",
+    "etzhayyim-root/00-contracts/bpmn/com/etzhayyim/legal-corpus/fetchCanLiiDelta.bpmn"
+  ],
+  "graphTables": [
+    "vertex_legal_corpus_source",
+    "vertex_legal_corpus_document",
+    "vertex_legal_corpus_document_pii",
+    "edge_legal_corpus_cites",
+    "mv_legal_corpus_jurisdiction_coverage"
+  ],
+  "embeddings": {
+    "model": "BAAI/bge-m3",
+    "dim": 1024,
+    "index": "FLAT brute-force <=> (IVF/HNSW deferred to Phase B+)",
+    "runtime": "sentence-transformers CPU on osm-ingest node"
+  },
+  "secrets": [
+    "vault://etzhayyim/legal-corpus/courtlistener.token",
+    "vault://etzhayyim/legal-corpus/canlii.api_key"
+  ],
+  "deployRequirements": [
+    "K8s namespace mitama-udf (osm-ingest node toleration for bge-m3)",
+    "Secret mitama-udf-pool-rw (RW_URL)",
+    "Secret lg-legal-corpus-secrets (COURTLISTENER_API_TOKEN, CANLII_API_KEY, MCP_AUTH_TOKEN)",
+    "Image ghcr.io/etzhayyim/legal-corpus-langgraph:latest-amd64",
+    "Migrations 20260427230000_vertex_legal_corpus applied"
+  ],
+  "mcpServer": "http://legal-corpus-mcp.mitama-udf.svc.cluster.local:8080",
+  "langserver": "http://legal-corpus-worker.mitama-udf.svc.cluster.local:8080",
+  "adrs": ["ADR-0049", "ADR-2605080600", "ADR-0044", "ADR-0018", "ADR-0016"]
+}
