@@ -6,11 +6,11 @@
 （`ingestDocument` / `getDocument` / `listDocuments` / `coverage`）である。**
 TypeScript 約 13 KB と vitest のテスト 1 本、それだけ。
 
-**そして最初に言っておくべきこととして、[`CLAUDE.md`](CLAUDE.md) はこの repo に
+**そして最初に言っておくべきこととして、[`AGENTS.md`](AGENTS.md) はこの repo に
 無いものを記述している。** あちらが書くのは K8s 上の LangGraph パイプライン
 （bge-m3 1024 次元の embedding・IVF/cosine 検索・5 つの取り込み CronJob・MCP
 サーバ）で、**その実装ファイルは 1 つもここに切り出されていない**（§2）。
-`CLAUDE.md` を設計の正本として読むのは正しいが、**この repo の中身の説明として
+`AGENTS.md` を設計の正本として読むのは正しいが、**この repo の中身の説明として
 読むと必ず間違える。**
 
 この README が書くのは設計ではなく、**いま実際に何が在って、何が動いて、
@@ -32,7 +32,7 @@ TypeScript 約 13 KB と vitest のテスト 1 本、それだけ。
 | **`kotoba/src/index.ts`**（420 B） | barrel。`Slice 1: 4 of 4 canonical lexicons ported` と書くが、**この数え方は `PROJECT.jsonld` と合わない**（§2） | — |
 | **`kotoba/test/legal-corpus.test.ts`**（3,330 B） | `MockEtzhayyim` に対する 9 ケース | **動く**（9 passed / 497 ms） |
 | `kotoba/package.json` / `tsconfig.json` / `vitest.config.ts` | 依存は 2 本とも **public repo の commit 固定**（§4） | — |
-| `CLAUDE.md`（6,911 B） | 設計の正本 —— ただし別のシステムのもの（§2） | — |
+| `AGENTS.md`（6,911 B） | 設計の正本 —— ただし別のシステムのもの（§2） | — |
 | `PROJECT.jsonld`（3,036 B） | actor 記述。lexicon 6 本・BPMN 8 本・graph table 5 本を列挙するが、**そのファイルはどれもここに無い** | — |
 | `README.edn` / `migration.edn` | 機械可読な同定 / 切り出しの出所 | — |
 
@@ -43,18 +43,18 @@ TypeScript 約 13 KB と vitest のテスト 1 本、それだけ。
 
 ## 2. 現在地（2026-08-17 UTC 実測）
 
-### `CLAUDE.md` / `PROJECT.jsonld` が指すファイルは、1 つもここに無い
+### `AGENTS.md` / `PROJECT.jsonld` が指すファイルは、1 つもここに無い
 
 細部のドリフトではない。**参照先が丸ごと別 repo に在る。**
 
 | 参照元 | 参照しているパス | この repo に在るか |
 |---|---|---|
-| `CLAUDE.md` | `50-infra/k8s/legal-corpus-langgraph/*`（LangGraph graph・FastAPI worker・Deployment・CronJob 6 本） | **無い** |
-| `CLAUDE.md` | `30-graph/graph-schema/migrations/20260427230000_vertex_legal_corpus.ts` | **無い** |
-| `CLAUDE.md` / `PROJECT.jsonld` | `etzhayyim-root/00-contracts/bpmn/.../*.bpmn`（8 本） | **無い** |
+| `AGENTS.md` | `50-infra/k8s/legal-corpus-langgraph/*`（LangGraph graph・FastAPI worker・Deployment・CronJob 6 本） | **無い** |
+| `AGENTS.md` | `30-graph/graph-schema/migrations/20260427230000_vertex_legal_corpus.ts` | **無い** |
+| `AGENTS.md` / `PROJECT.jsonld` | `etzhayyim-root/00-contracts/bpmn/.../*.bpmn`（8 本） | **無い** |
 | `PROJECT.jsonld` | `00-contracts/lexicons/.../*.json`（6 本） | **無い** |
 
-`CLAUDE.md` が表にする 11 個の task type（`legal.corpus.embedDocument` /
+`AGENTS.md` が表にする 11 個の task type（`legal.corpus.embedDocument` /
 `searchDocument` / `fetchEurLexDelta` …）も、**この repo には 1 つも実装が無い**。
 embedding も検索も取り込みも、ここではなくパイプライン側の仕事である。
 
@@ -86,7 +86,7 @@ embedding も検索も取り込みも、ここではなくパイプライン側�
 
 実測: embedding を 1 バイトも持たず `bodyTextCid` だけを持つレコードを 1 件入れると
 **`withEmbedding = 1`** が返る。この値は「本文 CID を持つ件数」であって、
-`CLAUDE.md` が言う embedding coverage ではない。
+`AGENTS.md` が言う embedding coverage ではない。
 
 **しかも既存テストがこの意味を固定している** ——
 `it("coverage aggregates + counts embeddings")` が `expect(cov.withEmbedding).toBe(1)`

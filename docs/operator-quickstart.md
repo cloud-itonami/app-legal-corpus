@@ -8,7 +8,7 @@
 
 この repo に**デプロイ手順は無い**。ここに在るのは `@etzhayyim/sdk` の上に建つ
 ライブラリ 4 本とそのテストで、サーバも Worker も CLI も無い
-（`CLAUDE.md` が書く K8s の LangGraph パイプラインは別 repo。README §2）。
+（`AGENTS.md` が書く K8s の LangGraph パイプラインは別 repo。README §2）。
 つまり quickstart の完了条件は「**型が通り、テストが緑になること**」である。
 
 ## 0. 前提
@@ -94,7 +94,7 @@ npm test                 # vitest run
 
 **緑を信じる前に、赤くなることを 1 度見る。** 実装を 1 箇所壊して、
 **壊した場所と落ちるテストが対応すること**を確認する（壊し方を間違えた赤は
-「成功した実演」に見える。CLAUDE.md の 5 問）。
+「成功した実演」に見える。AGENTS.md の 5 問）。
 
 冪等性を壊す例 —— `src/registry.ts` の `ingestDocument` で既存レコードを見る分岐
 
